@@ -3,11 +3,13 @@
     var api = {
         plateKeyboard: {
             init: function (options) {
-                var defaults = { id: '' };
+                var defaults = { id: '', plateColor: '', plateNo: '' };
                 var ps = $.extend(defaults, options);
                 var container = $('#' + ps.id);
+                api.config.defaultValue.plateColor = ps.plateColor;
+                api.config.defaultValue.plateNo = ps.plateNo;
 
-                var plateColorHtml = ['<ul id="bse-kb-plate-color">',
+                var plateColorHtml = ['<ul id="' + api.config.id.plateColor + '">',
                             '        <li t="蓝牌白字" class="active blue">蓝牌</li>',
                             '        <li t="黄牌黑字">黄牌</li>',
                             '        <li t="白牌黑字">白牌</li>',
@@ -66,12 +68,14 @@
                             '            <a href="javascript:">鄂</a>',
                             '            <a href="javascript:">赣</a>',
                             '        </div>',
-                            '        <div id="bse-kb-last-province" style="text-align:left">',
+                            '        <div>',
                             '            <a href="javascript:">贵</a>',
                             '            <a href="javascript:">川</a>',
                             '            <a href="javascript:">藏</a>',
-                            '            <a href="javascript:" class="bse-kb-key-red" key="使">使</a>',
-                            '            <a href="javascript:" ctrl="fold" key="fold" id="bse-kb-last-p-fold" class="iconfont icon-kbfold" style="font-size:1rem;background:#B1B8C2">收起</a>',
+                            '            <a href="javascript:" class="bse-kb-key-red bse-kb-key-disabled" key="使">使</a>',
+                            '            <a href="javascript:" ctrl="space" style="visibility:hidden">&nbsp;</a>',
+                            '            <a href="javascript:" ctrl="fold" key="fold" class="iconfont icon-kbfold" style="background:#B1B8C2"></a>',
+                            '            <a href="javascript:" ctrl="del" key="del" class="iconfont icon-kbdel" style="background:#B1B8C2"></a>',
                             '        </div>',
                             '    </div>'].join("");
                 $(provinceHtml).appendTo($(document.body));
@@ -129,37 +133,38 @@
                             '            <a href="javascript:">B</a>',
                             '            <a href="javascript:">N</a>',
                             '            <a href="javascript:">M</a>',
-                            '            <a href="javascript:" ctrl="fold" key="fold" class="iconfont icon-kbfold" style="width:75px;font-size:1rem;background:#B1B8C2">收起</a>',
+                            //'            <a href="javascript:" ctrl="fold" key="fold" class="iconfont icon-kbfold" style="width:38px;background:#B1B8C2"></a>',
+                            '            <a href="javascript:" ctrl="del" key="del" class="iconfont icon-kbdel" style="width:38px;background:#B1B8C2"></a>',
                             '        </div>',
                             '    </div>'].join("");
                 $(keyboardHtml).appendTo($(document.body));
 
                 api.plateColor.init();
                 api.plateInput.init();
-                api.initProvinceKeyboard();
+                api.provinceKeyboard.init();
                 api.charKeyboard.init();
 
                 api.setFoldKeyEnable();
-                api.setKeyEnable('使', false);
             }
         },
 
         plateColor: {//车牌颜色
             init: function () {
-                $('#bse-kb-plate-color li').each(function (i) {
+                $('#' + api.config.id.plateColor + ' li').each(function (i) {
                     var me = $(this);
                     me.click(function () {
                         var beforeColor = api.plateInput.result.plateColor();//切换之前选择的颜色
-                        $('#bse-kb-plate-color li').attr('class', '');
+                        $('#' + api.config.id.plateColor + ' li').attr('class', '');
                         $('.bse-kb-plate-last').hide();
                         api.setKeyEnable('使', false);
+                        me.addClass('active');
                         switch (i) {
-                            case 0: me.addClass('active').addClass('blue'); break;
-                            case 1: me.addClass('active').addClass('yellow'); break;
-                            case 2: me.addClass('active').addClass('white'); break;
-                            case 3: me.addClass('active').addClass('black'); api.setKeyEnable('使', true); break;
-                            case 4: me.addClass('active').addClass('green'); $('.bse-kb-plate-last').show(); break;
-                            case 5: me.addClass('active').addClass('fly'); break;
+                            case 0: me.addClass('blue'); break;
+                            case 1: me.addClass('yellow'); break;
+                            case 2: me.addClass('white'); break;
+                            case 3: me.addClass('black'); api.setKeyEnable('使', true); break;
+                            case 4: me.addClass('green'); $('.bse-kb-plate-last').show(); break;
+                            case 5: me.addClass('fly'); break;
                         }
                         var curColor = me.attr('t');
                         if (beforeColor == '绿牌黑字' && curColor != '绿牌黑字') {
@@ -210,12 +215,21 @@
                     });
                 });
                 api.plateInput.setLayout();
+
+                //初始化车牌颜色                
+                var defaultPlateColor = api.config.defaultValue.plateColor;
+                $('#' + api.config.id.plateColor + ' li').each(function () {
+                    if ($(this).attr('t') == defaultPlateColor) {
+                        $(this).click();
+                        return;
+                    }
+                });
             }
         },
 
         plateInput: {//车牌输入框
             init: function () {
-                $('#bse-kb-plate-input .bse-kb-plate-item').each(function (i) {
+                $('#' + api.config.id.plateInput + ' .bse-kb-plate-item').each(function (i) {
                     var me = $(this);
                     me.click(function () {
                         api.config.plateNoCharIndex = i;
@@ -223,6 +237,36 @@
                         if (i == 0) { api.changeKeyboard('省份'); } else { api.changeKeyboard('ABC'); }
                     });
                 });
+
+                //初始化车牌
+                var defaultPlateNo = api.config.defaultValue.plateNo;
+                var array = new Array();
+                if (defaultPlateNo != '') {
+                    for (var i = 0; i < defaultPlateNo.length; i++) {
+                        var item = defaultPlateNo[i];
+                        if (item == '急') { continue; }
+                        if (item == '应') {
+                            array.push(item + '急');
+                        }
+                        else {
+                            array.push(item);
+                        }
+                    }
+                    var items = api.plateInput.getItems();
+                    for (var j = 0; j < array.length; j++) {
+                        items.eq(j).text(array[j]);
+                    }
+                    //给车牌上色
+                    if (api.plateInput.getItemText(0) == '使') {
+                        api.plateInput.getItems().eq(0).addClass('bse-kb-key-red');
+                        $('#' + api.config.id.province + ' li[key="使"]').removeClass('bse-kb-key-disabled');
+                    }
+                    var sixChar = api.plateInput.getItemText(6);
+                    if ('警领应急'.indexOf(sixChar) != -1) {
+                        api.plateInput.getItems().eq(6).addClass('bse-kb-key-red');
+                    }
+                }
+                api.plateInput.fixFontSize();
             },
             setLayout: function () {
                 var selectedColor = api.plateInput.result.plateColor();
@@ -242,8 +286,11 @@
                 else {
                     numberKeyboard.show();
                 }
-                if ($.trim(items.eq(0).text()) == '使') {//使馆车无法如何都有数字键盘
+                if ($.trim(items.eq(0).text()) == '使') {//使馆车无论如何都有数字键盘
                     numberKeyboard.show();
+                    if ('港澳警领学挂应急'.indexOf(api.plateInput.getItemText(6)) != -1) {
+                        api.plateInput.getItems().eq(6).text('');
+                    }
                 }
 
                 var specialKeyboard = $('#' + api.config.id.keyboard + ' div').eq(0);
@@ -307,6 +354,7 @@
                 else {
                     api.plateInput.getItems().eq(0).removeClass('bse-kb-key-red');
                 }
+                api.plateInput.fixFontSize();
             },
             reset: function () {
                 api.plateInput.getItems().text('');
@@ -322,72 +370,79 @@
                 if (items.size() == 0) { return ''; }
                 return $.trim(items.eq(index).text());
             },
-            removeSpecial: function () {
-                var selectedPlateColor = api.plateInput.result.plateColor();
-                var sixChar = api.plateInput.getItemText(5);//第6位的文本值
-                if (sixChar != '') {
-                    switch (selectedPlateColor) {
-                        case '黑牌白字':
-                            if ('警学挂应急'.indexOf(sixChar) != -1) {
-                                api.plateInput.getItems(5).text('');
-                            }
-                            break;
-                    }
+            fixFontSize: function () {
+                if (api.plateInput.getItemText(6) == '应急') {
+                    api.plateInput.getItems().eq(6).addClass('bse-kb-input-sfont');
+                }
+                else {
+                    api.plateInput.getItems().eq(6).removeClass('bse-kb-input-sfont');
                 }
             },
             result: {
                 plateColor: function () {
-                    return $.trim($('#bse-kb-plate-color .active').attr('t'));
+                    return $.trim($('#' + api.config.id.plateColor + ' .active').attr('t'));
                 },
                 color: function () {
-                    return $.trim($('#bse-kb-plate-color .active').text());
+                    return $.trim($('#' + api.config.id.plateColor + ' .active').text());
                 },
                 plateNo: function () {
                     var items = api.plateInput.getItems();
                     var rs = '';
                     items.each(function () { rs += $.trim($(this).text()); });
                     return rs;
+                },
+                selectedIndex: function () {
+                    var selectedIndex = 0;
+                    api.plateInput.getItems().each(function (i) {
+                        if ($(this).hasClass('bse-kb-plate-cur')) {
+                            selectedIndex = i;
+                            return;
+                        }
+                    });
+                    return selectedIndex;
                 }
             }
         },
 
-        initProvinceKeyboard: function () {//省份键盘
-            var keyboardWidth = $('.bse-keyboard').width();
-            var pItemWidth = (keyboardWidth / 7 * 0.7).toFixed(2);
-            var pItemMargin = (keyboardWidth / 7 * 0.1 / 2).toFixed(2);
+        provinceKeyboard: {//省份键盘
+            init: function () {
+                var keyboardWidth = $('.bse-keyboard').width();
+                var pItemWidth = (keyboardWidth / 7 * 0.7).toFixed(2);
+                var pItemMargin = (keyboardWidth / 7 * 0.1 / 2).toFixed(2);
 
-            $('#' + api.config.id.province + ' a').each(function () {//选择省份
-                var me = $(this);
-                if (me.attr('t') == undefined) {
-                    me.css({ width: pItemWidth + 'px', 'margin-left': pItemMargin + 'px', 'margin-right': pItemMargin + 'px' });
-                }
-                me.click(function () {//省份键盘点击                    
-                    var ctrlKey = me.attr('ctrl');
-                    switch (ctrlKey) {
-                        case undefined://说明是输入框，填入指定的位置
-                            if (me.hasClass('bse-kb-key-disabled')) { return; }
-                            var v = $.trim(me.text());
-                            api.plateInput.fillChar(0, v);
-                            api.config.plateNoCharIndex = 1;
-                            api.plateInput.setCurrent(api.config.plateNoCharIndex);
-                            api.changeKeyboard('ABC');
-                            break;
-                        case 'fold':
-                            api.hideKeyboard();
-                            return;
+                $('#' + api.config.id.province + ' a').each(function () {//选择省份
+                    var me = $(this);
+                    if (me.attr('t') == undefined) {
+                        me.css({ width: pItemWidth + 'px', 'margin-left': pItemMargin + 'px', 'margin-right': pItemMargin + 'px' });
                     }
+                    me.click(function () {//省份键盘点击                    
+                        var ctrlKey = me.attr('ctrl');
+                        switch (ctrlKey) {
+                            case undefined://说明是输入框，填入指定的位置
+                                if (me.hasClass('bse-kb-key-disabled')) { return; }
+                                var v = $.trim(me.text());
+                                api.plateInput.fillChar(0, v);
+                                api.config.plateNoCharIndex = 1;
+                                api.plateInput.setCurrent(api.config.plateNoCharIndex);
+                                api.changeKeyboard('ABC');
+                                break;
+                            case 'fold':
+                                api.hideKeyboard();
+                                return;
+                            case 'del':
+                                api.backspace();
+                                return;
+                        }
+                    });
                 });
-            });
-
-            $('#bse-kb-last-province').css({ 'margin-left': ($('#' + api.config.id.province + ' a:first').offset().left - pItemMargin) + 'px' });
-            $('#bse-kb-last-p-fold').css({ width: (pItemWidth * 3 + pItemMargin * 8) + 'px', 'margin-left': pItemMargin + 'px' });
+            }
         },
 
         charKeyboard: {//字符键盘
             init: function () {
                 var keyboardWidth = $('.bse-keyboard').width();
-                var charItemWidth = (keyboardWidth / 10 * 0.7).toFixed(2);
-                var charItemMargin = (keyboardWidth / 10 * 0.1 / 2).toFixed(2);
+                var charItemWidth = (keyboardWidth / 10 * 0.74).toFixed(2);
+                var charItemMargin = (keyboardWidth / 10 * 0.1 / 2).toFixed(2) - 1;
                 $('#' + api.config.id.keyboard + ' a').each(function () {//ABC键盘
                     var me = $(this);
                     if (me.attr('t') == undefined && $.trim(me.text()).length == 1) {
@@ -404,12 +459,29 @@
                             case 'fold':
                                 api.hideKeyboard();
                                 return;
+                            case 'del':
+                                api.backspace();
+                                return;
                         }
                     });
                 });
             }
         },
+        backspace: function () {
+            var selectedIndex = api.plateInput.result.selectedIndex();
+            api.plateInput.getItems().eq(selectedIndex).text('');
+            if (selectedIndex > 0) {
+                var curIndex = api.config.plateNoCharIndex;
+                curIndex--;
+                api.plateInput.setCurrent(curIndex);
+                if (curIndex == 0) {
+                    api.changeKeyboard('省份');
+                }
+                api.config.plateNoCharIndex = curIndex;
+            }
 
+            api.setFoldKeyEnable();
+        },
         setFoldKeyEnable: function () {
             if (api.isWholePlate()) {
                 api.setKeyEnable('fold', true);
@@ -459,7 +531,13 @@
                 charKeyboard.hide();
             }
         },
-        config: { plateNoCharIndex: 0, id: { plateInput: 'bse-kb-plate-input', province: 'bse-kb-keys-province', keyboard: 'bse-kb-keyboard' } }
+        config: {
+            plateNoCharIndex: 0,
+            id: {
+                plateColor: 'bse-kb-plate-color', plateInput: 'bse-kb-plate-input', province: 'bse-kb-keys-province', keyboard: 'bse-kb-keyboard'
+            },
+            defaultValue: { plateColor: '', plateNo: '' }
+        }
     }
     bensie.plateKeyboard = { init: api.plateKeyboard.init, selectedData: api.plateInput.result }
 })($);

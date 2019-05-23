@@ -13,15 +13,16 @@ ul, li {padding:0;margin:0;list-style:none;}
 
 #bse-kb-plate-input{margin:10px auto 0 auto;padding:0;width:94%;height:37px;border-left:1px solid grey}
 #bse-kb-plate-input li{list-style:none;padding:0;margin:0;float:left;height:35px;line-height:35px;text-align:center;font-size:1.2rem}
+#bse-kb-plate-input li.bse-kb-input-sfont{font-size:0.8rem}
 .bse-kb-plate-item{border:1px solid grey;border-left:0}
 .bse-kb-plate-cur {background-color:rgb(148,190,241)}
 .bse-keyboard a.bse-kb-key-red, #bse-kb-plate-input li.bse-kb-key-red {color:#f00}
 .bse-keyboard a.bse-kb-key-disabled {color:#ccc}
 
-.bse-keyboard{width:100%;border:0 solid #ff6a00;background-color:rgb(209,213,219);position:fixed;bottom:0;z-index:10000;padding:5px 0;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
-.bse-keyboard div{height:40px;line-height:40px;text-align:center}
-.bse-keyboard a{border:1px solid rgb(164,168,172);background:#fff;height:30px;line-height:30px;display:inline-block;text-align:center;text-decoration:none;margin-right:3px;border-radius:5px;color:#030303;font-size:1.2rem}
-#bse-kb-chars0{padding:2px 0;background-color:#bbc2ca}
+.bse-keyboard{width:100%;background-color:rgb(209,213,219);position:fixed;bottom:0;z-index:10000;padding:5px 0;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
+.bse-keyboard div{text-align:center;padding:0;}
+.bse-keyboard a{border:1px solid rgb(164,168,172); margin:5px auto;background:#fff;line-height:35px;display:inline-block;text-align:center;text-decoration:none;border-radius:5px;color:#030303;font-size:1.3rem}
+
 
 @font-face {font-family: "iconfont";
   src: url('iconfont.eot?t=1558427673142'); /* IE9 */
@@ -34,7 +35,6 @@ ul, li {padding:0;margin:0;list-style:none;}
 
 .iconfont {
   font-family: "iconfont" !important;
-  font-size: 16px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
