@@ -8,8 +8,8 @@ H5 jquery 车牌输入组件
 
 
 ## 调用示例
-```
-<script src=”http://code.jquery.com/jquery-1.9.1.min.js”></script>
+``` html
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 <link href="bensie.plateKeyboard.css?v=30" rel="stylesheet" />
 <script src="bensie.plateKeyboard.js?v=30"></script>
 <div id="kb" style="margin-top:30px;"></div>
