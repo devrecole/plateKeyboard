@@ -133,7 +133,7 @@
                             '            <a href="javascript:">B</a>',
                             '            <a href="javascript:">N</a>',
                             '            <a href="javascript:">M</a>',
-                            //'            <a href="javascript:" ctrl="fold" key="fold" class="iconfont icon-kbfold" style="width:38px;background:#B1B8C2"></a>',
+                            '            <a href="javascript:" ctrl="fold" key="fold" class="iconfont icon-kbfold" style="width:38px;background:#B1B8C2"></a>',
                             '            <a href="javascript:" ctrl="del" key="del" class="iconfont icon-kbdel" style="width:38px;background:#B1B8C2"></a>',
                             '        </div>',
                             '    </div>'].join("");
