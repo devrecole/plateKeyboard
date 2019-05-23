@@ -16,7 +16,7 @@ H5 jquery 车牌输入组件
 <script>
     //初始化
     $(function () {
-        bensie.plateKeyboard.init({ id: 'kb' });
+        bensie.plateKeyboard.init({ id: 'kb', plateColor:'蓝牌白字', plateNo:'粤XGM789' });
     });
     
     //演示获取录入的内容
