@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="format-detection" content="telephone=no" />
     <meta http-equiv="cleartype" content="on" />
-    <script src=”http://code.jquery.com/jquery-1.9.1.min.js”></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
     <link href="bensie.plateKeyboard.css?v=30" rel="stylesheet" />
     <script src="bensie.plateKeyboard.js?v=30"></script>
     <style>
@@ -28,6 +28,7 @@
     </div>
 
     <script>
+        
         function showPlateColor() {
             var color = bensie.plateKeyboard.selectedData.plateColor();
             alert(color);
@@ -41,6 +42,7 @@
         $(function () {
             bensie.plateKeyboard.init({ id: 'kb' });
         });
+        
     </script>
 </body>
 </html>
