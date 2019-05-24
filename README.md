@@ -1,4 +1,4 @@
-### plateKeyboard jQuery H5 车牌录入组件
+### plateKeyboard jQuery H5 车牌输入组件
 
 plateKeyboard是一个基于jQuery的移动端插件，支持5类颜色的车牌录入，自带车牌规则校验，调用时一行代码轻松搞定。
 
@@ -29,5 +29,6 @@ plateKeyboard是一个基于jQuery的移动端插件，支持5类颜色的车牌
 </script>
 ```
 ## 效果演示
-![image](https://github.com/devrecole/plateKeyboard/blob/master/example/plateinput.png)
-![image](https://github.com/devrecole/plateKeyboard/blob/master/example/p2.png)
+![image](https://github.com/devrecole/plateKeyboard/blob/master/example/demo-province.png)
+![image](https://github.com/devrecole/plateKeyboard/blob/master/example/demo-char-1.png)
+![image](https://github.com/devrecole/plateKeyboard/blob/master/example/demo-char-2.png)
